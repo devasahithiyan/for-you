@@ -1,66 +1,287 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Hello Jovi</title>
-<style>
-p {
-text-align: center;
-font-size: 50px;
-font-family: Candara, Oswald;
-}
-img {
-display: block;
-margin: 0 auto;
-width: 25%;
-}
-</style>
-</head>
-<body>
-<p>is jovitha jokes are lame ?</p>
-<img src="https://media.tenor.com/J9HLFRGZ_HUAAAAi/cute.gif">
-</body>
-<title>Botões</title>
-<style>
-#botao1 {
-position: fixed;
- font-size: 10px;
-top: 70%;
-left: 55%;
-transform: translate(-50%, -50%);
-}
-#botao2 {
- font-size: 10px;
-position: absolute;
- left: 39%;
-  top: 68%;
-}
-</style>
-</head>
-<body>
-<button id="botao1">YES</button>
-<button id="botao2">NO</button>
-<script>
-const button2 = document.getElementById('botao2');
-let left = 40;
-button2.addEventListener('mouseover', function() {
-  if(left == 40){
-    left = 44;
-  }else{
-    left = 40;
-  }
-  this.style.left = left + '%';
-});
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Go Out with Me?</title>
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        /* Reset default browser styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-</script>
-<script>document.getElementById('botao1').addEventListener('click', function() {
-alert('💀');
-});
-</script>
+        /* Body Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f06, #f79);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Container */
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+
+        /* Heading */
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ffeb3b;
+        }
+
+        /* Question */
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        /* Image */
+        img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Float Animation for Image */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Button Container */
+        .button-container {
+            position: relative;
+            height: 80px;
+            width: 100%;
+        }
+
+        /* Button Styles */
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            position: absolute;
+            width: 100px;
+            height: 40px;
+        }
+
+        #yes-btn {
+            background-color: #28a745;
+            color: #fff;
+            left: 10%;
+        }
+
+        #yes-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        #no-btn {
+            background-color: #dc3545;
+            color: #fff;
+            right: 10%;
+            /* Initially stationary */
+            animation: none;
+        }
+
+        #no-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Moving Animation for "NO" Button */
+        @keyframes moveNoBtn {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-150px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            img {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 20px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+                width: 80px;
+                height: 35px;
+            }
+
+            .button-container {
+                height: 70px;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 100; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            color: #333; /* Updated text color for better visibility */
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hi Rithanya!</h1>
+        <img src="https://media.tenor.com/J9HLFRGZ_HUAAAAi/cute.gif" alt="Cute GIF">
+        <p>Will you go out with me?</p>
+        <div class="button-container">
+            <button id="yes-btn">YES</button>
+            <button id="no-btn">NO</button>
+        </div>
+    </div>
+
+    <!-- Audio Element for Celebration Sound -->
+    <audio id="celebration-sound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
+
+    <!-- Modal Structure -->
+    <div id="celebration-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Thank You!</h2>
+            <p>Thank you, see you soon! 🎉</p>
+            <img src="https://media.tenor.com/FmQdvXqSXZwAAAAC/excited.gif" alt="Excited GIF" width="100">
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        const celebrationSound = document.getElementById('celebration-sound');
+        const modal = document.getElementById('celebration-modal');
+        const closeBtn = document.querySelector('.close');
+
+        // Initialize movement speed (seconds)
+        let moveSpeed = 3;
+
+        // Function to start moving the "NO" button
+        function startMovingNoBtn() {
+            if (!noBtn.classList.contains('moving')) {
+                noBtn.classList.add('moving');
+                noBtn.style.animation = `moveNoBtn ${moveSpeed}s linear infinite`;
+            }
+            // Increase speed by decreasing animation duration
+            moveSpeed = moveSpeed > 0.5 ? moveSpeed - 0.5 : 0.5;
+            noBtn.style.animationDuration = `${moveSpeed}s`;
+        }
+
+        // Event listener for "NO" button click
+        noBtn.addEventListener('click', () => {
+            startMovingNoBtn();
+        });
+
+        // Event listener for "YES" button click
+        yesBtn.addEventListener('click', () => {
+            // Play celebration sound
+            celebrationSound.play();
+
+            // Trigger confetti
+            confetti({
+                particleCount: 200,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // Show the modal popup
+            modal.style.display = 'flex';
+        });
+
+        // Event listener for closing the modal
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Close the modal when clicking outside of the modal content
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Optional: Prevent "NO" button from being easily clickable by adding pointer events
+        noBtn.addEventListener('pointerover', () => {
+            // Optional: Add any additional behavior when pointer is over "NO" button
+        });
+
+        // For mobile: Prevent accidental clicks by moving the button on touch
+        noBtn.addEventListener('touchstart', () => {
+            // Optional: Add behavior if needed
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
